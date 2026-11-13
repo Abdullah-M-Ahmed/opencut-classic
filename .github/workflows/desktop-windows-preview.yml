@@ -49,6 +49,11 @@ jobs:
       - name: Build OpenCut editor
         run: bun run build:web
 
+      - name: Diagnose TypeScript errors on build failure
+        if: failure()
+        continue-on-error: true
+        run: bunx tsc -p apps/web/tsconfig.json --noEmit --pretty false
+
       - name: Package Windows desktop installer
         run: bun run --cwd apps/desktop-electron package:windows
 
