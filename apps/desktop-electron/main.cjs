@@ -230,10 +230,27 @@ if (!app.requestSingleInstanceLock()) {
   app.whenReady().then(async () => {
     try {
       const baseUrl = await launchServer();
+      if (process.env.OPENCUT_DESKTOP_SMOKE_TEST === "1") {
+        const response = await fetch(baseUrl + "/projects", {
+          signal: AbortSignal.timeout(10000),
+        });
+        if (!response.ok) {
+          throw new Error("Desktop projects page failed smoke test with HTTP " + response.status);
+        }
+        logStartup("SMOKE TEST", "Desktop launch and projects page OK");
+        stopServer();
+        app.exit(0);
+        return;
+      }
       createWindow(baseUrl);
     } catch (error) {
       console.error(error);
       logStartup("STARTUP FAILED", error?.stack || String(error));
+      if (process.env.OPENCUT_DESKTOP_SMOKE_TEST === "1") {
+        stopServer();
+        app.exit(1);
+        return;
+      }
       dialog.showErrorBox(
         "OpenCut Desktop could not start",
         (error instanceof Error ? error.message : String(error)) +
