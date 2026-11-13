@@ -1,9 +1,6 @@
 name: Desktop Windows Preview
 
 on:
-  push:
-    branches:
-      - feature/desktop-editor-workspace
   pull_request:
     paths:
       - "apps/web/**"
