@@ -22,7 +22,9 @@ fn fragment_main(input: VertexOutput) -> @location(0) vec4f {
     var color = vec4f(0.0, 0.0, 0.0, 0.0);
     var total_weight = 0.0;
 
-    for (var index = -30; index <= 30; index = index + 1) {
+    // Avoid sampling unused Gaussian tails for narrow blurs.
+    let radius = clamp(i32(ceil(3.0 * sigma / max(1.0, step_size))), 1, 30);
+    for (var index = -radius; index <= radius; index = index + 1) {
         let position = f32(index) * step_size;
         let weight = exp(-(position * position) / (2.0 * sigma * sigma));
         let sample_uv = input.tex_coord + (texel_size * uniforms.direction * position);
