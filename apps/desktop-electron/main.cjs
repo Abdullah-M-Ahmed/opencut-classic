@@ -164,9 +164,17 @@ async function launchServer() {
       throw new Error("Bundled Next.js server was not found.");
     }
     logStartup("LAUNCH", "Using packaged runtime at " + serverScript);
+    const dependencyDirectory = path.join(runtimeDirectory, "runtime-deps");
+    if (!fs.existsSync(path.join(dependencyDirectory, "next", "package.json"))) {
+      throw new Error("Bundled Next.js dependencies are missing at " + dependencyDirectory);
+    }
     startProcess(process.execPath, [serverScript], {
       cwd: path.dirname(serverScript),
-      env: { ...nextEnvironment(port), ELECTRON_RUN_AS_NODE: "1" },
+      env: {
+        ...nextEnvironment(port),
+        NODE_PATH: [dependencyDirectory, process.env.NODE_PATH].filter(Boolean).join(path.delimiter),
+        ELECTRON_RUN_AS_NODE: "1",
+      },
     });
   } else {
     const repoRoot = path.resolve(__dirname, "../..");
