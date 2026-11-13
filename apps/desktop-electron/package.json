@@ -1,7 +1,7 @@
 {
   "name": "@opencut/desktop-electron",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Windows desktop launcher for the OpenCut Classic editor",
   "main": "main.cjs",
   "scripts": {
@@ -9,7 +9,7 @@
     "dev": "electron .",
     "prepare:runtime": "node scripts/prepare-runtime.mjs",
     "package:windows": "node scripts/prepare-runtime.mjs && electron-builder --win nsis --x64 --publish never",
-    "check": "node --check main.cjs && node --check scripts/prepare-runtime.mjs"
+    "check": "node --check main.cjs && node --check scripts/prepare-runtime.mjs && node --check scripts/smoke-test-runtime.mjs && node --check scripts/smoke-test-desktop.mjs"
   },
   "devDependencies": {
     "electron": "45.3.0",
@@ -24,17 +24,24 @@
     },
     "files": [
       "main.cjs",
-      "package.json"
+      "package.json",
+      "!**/node_modules/**",
+      "!**/dist/**",
+      "!**/runtime/**"
     ],
     "extraResources": [
       {
         "from": "runtime",
         "to": "opencut-server",
-        "filter": ["**/*"]
+        "filter": [
+          "**/*"
+        ]
       }
     ],
     "win": {
-      "target": ["nsis"],
+      "target": [
+        "nsis"
+      ],
       "artifactName": "OpenCut-Desktop-${version}-${arch}.${ext}"
     },
     "nsis": {
