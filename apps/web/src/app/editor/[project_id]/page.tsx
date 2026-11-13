@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
+import "./desktop-workspace.css";
 import {
 	ResizablePanelGroup,
 	ResizablePanel,
@@ -42,7 +43,7 @@ export default function Editor() {
 	return (
 		<MobileGate>
 			<EditorProvider projectId={projectId}>
-				<div className="bg-background flex h-screen w-screen flex-col overflow-hidden">
+				<div className="desktop-editor dark bg-background flex h-screen w-screen flex-col overflow-hidden">
 					<DegradedRendererBanner />
 					<EditorHeader />
 					<div className="min-h-0 min-w-0 flex-1">
