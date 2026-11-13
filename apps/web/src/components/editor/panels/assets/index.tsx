@@ -25,11 +25,7 @@ export function AssetsPanel() {
 			</div>
 		),
 		captions: <Captions />,
-		adjustment: (
-			<div className="text-muted-foreground p-4">
-				Adjustment view coming soon...
-			</div>
-		),
+		adjustment: <EffectsView mode="color" />,
 		settings: <SettingsView />,
 	};
 
