@@ -12,7 +12,7 @@
     "check": "node --check main.cjs && node --check scripts/prepare-runtime.mjs"
   },
   "devDependencies": {
-    "electron": "45.3.2",
+    "electron": "45.3.0",
     "electron-builder": "^26.0.12"
   },
   "build": {
