@@ -57,7 +57,9 @@ function stageRuntimePackage(name, required = true, requesterDir = null) {
   }
   const packageJson = JSON.parse(fs.readFileSync(path.join(source, "package.json"), "utf8"));
   staged.add(name);
-  const destination = path.join(outputDir, "node_modules", name);
+  // Keep vendored runtime packages outside a node_modules directory because
+  // electron-builder filters node_modules in extraResources.
+  const destination = path.join(outputDir, "runtime-deps", name);
   fs.mkdirSync(path.dirname(destination), { recursive: true });
   fs.cpSync(source, destination, { recursive: true, dereference: true });
   for (const dependency of Object.keys(packageJson.dependencies || {})) {
@@ -71,6 +73,9 @@ for (const name of ["next", "react", "react-dom"]) {
   stageRuntimePackage(name);
 }
 console.log("Staged self-contained server dependencies:", staged.size);
+if (!fs.existsSync(path.join(outputDir, "runtime-deps", "next", "package.json"))) {
+  throw new Error("Next.js was not staged into runtime-deps.");
+}
 
 
 // Next may emit server.js at the standalone root or nested beneath apps/web.
