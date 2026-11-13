@@ -13,16 +13,19 @@ if (!fs.existsSync(executable)) {
 const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "opencut-desktop-smoke-"));
 let stdout = "";
 let stderr = "";
+const childEnvironment = {
+  ...process.env,
+  OPENCUT_DESKTOP_SMOKE_TEST: "1",
+  // Test in a separate app data directory to protect preexisting projects.
+  APPDATA: path.join(tempDir, "Roaming"),
+  LOCALAPPDATA: path.join(tempDir, "Local"),
+};
+// Must not be defined at all, not even as an empty string, when testing
+// the actual Electron application rather than Electron's Node runtime mode.
+delete childEnvironment.ELECTRON_RUN_AS_NODE;
 const child = spawn(executable, [], {
   windowsHide: true,
-  env: {
-    ...process.env,
-    OPENCUT_DESKTOP_SMOKE_TEST: "1",
-    // Test in a separate app data directory to protect preexisting projects.
-    APPDATA: path.join(tempDir, "Roaming"),
-    LOCALAPPDATA: path.join(tempDir, "Local"),
-    ELECTRON_RUN_AS_NODE: "",
-  },
+  env: childEnvironment,
 });
 child.stdout?.on("data", (part) => { stdout = (stdout + String(part)).slice(-12000); });
 child.stderr?.on("data", (part) => { stderr = (stderr + String(part)).slice(-12000); });
