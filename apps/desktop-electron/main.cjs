@@ -12,6 +12,31 @@ const path = require("node:path");
 
 let nextProcess = null;
 let exiting = false;
+let recentServerOutput = "";
+const STARTUP_LOG_NAME = "startup.log";
+
+function startupLogPath() {
+  const dir = app.getPath("userData");
+  fs.mkdirSync(dir, { recursive: true });
+  return path.join(dir, STARTUP_LOG_NAME);
+}
+
+function logStartup(label, value) {
+  const text = String(value).trim();
+  if (!text) return;
+  const entry = new Date().toISOString() + " [" + label + "] " + text + "\n";
+  recentServerOutput = (recentServerOutput + entry).slice(-6000);
+  try {
+    // Local-only log for diagnosing packaged startup, capped to avoid huge files.
+    const file = startupLogPath();
+    if (fs.existsSync(file) && fs.statSync(file).size > 1024 * 1024) {
+      fs.renameSync(file, file + ".old");
+    }
+    fs.appendFileSync(file, entry, "utf8");
+  } catch (error) {
+    console.error("Could not write OpenCut startup log:", error);
+  }
+}
 
 function isLoopback(url) {
   try {
@@ -74,7 +99,7 @@ function freePort() {
 async function awaitHealth(baseUrl, child, attempts = 120) {
   for (let attempt = 0; attempt < attempts; attempt += 1) {
     if (child && child.exitCode !== null) {
-      throw new Error(`OpenCut server stopped unexpectedly (exit ${child.exitCode}).`);
+      throw new Error("OpenCut server exited with code " + child.exitCode + ".\n" + recentServerOutput.slice(-2500) + "\nLog: " + startupLogPath());
     }
     try {
       const response = await fetch(baseUrl + "/api/health", {
@@ -96,9 +121,19 @@ function startProcess(command, args, options) {
     stdio: ["ignore", "pipe", "pipe"],
     ...options,
   });
-  child.on("error", (error) => console.error("OpenCut server error:", error));
-  child.stdout?.on("data", (chunk) => console.info("[OpenCut]", String(chunk).trim()));
-  child.stderr?.on("data", (chunk) => console.error("[OpenCut]", String(chunk).trim()));
+  child.on("error", (error) => {
+    logStartup("PROCESS ERROR", error.stack || error.message);
+    console.error("OpenCut server error:", error);
+  });
+  child.on("exit", (code, signal) => logStartup("PROCESS EXIT", "code=" + code + " signal=" + signal));
+  child.stdout?.on("data", (chunk) => {
+    logStartup("SERVER STDOUT", chunk);
+    console.info("[OpenCut]", String(chunk).trim());
+  });
+  child.stderr?.on("data", (chunk) => {
+    logStartup("SERVER STDERR", chunk);
+    console.error("[OpenCut]", String(chunk).trim());
+  });
   nextProcess = child;
   return child;
 }
@@ -128,6 +163,7 @@ async function launchServer() {
     if (!fs.existsSync(serverScript)) {
       throw new Error("Bundled Next.js server was not found.");
     }
+    logStartup("LAUNCH", "Using packaged runtime at " + serverScript);
     startProcess(process.execPath, [serverScript], {
       cwd: path.dirname(serverScript),
       env: { ...nextEnvironment(port), ELECTRON_RUN_AS_NODE: "1" },
@@ -197,9 +233,12 @@ if (!app.requestSingleInstanceLock()) {
       createWindow(baseUrl);
     } catch (error) {
       console.error(error);
+      logStartup("STARTUP FAILED", error?.stack || String(error));
       dialog.showErrorBox(
         "OpenCut Desktop could not start",
-        `${error instanceof Error ? error.message : String(error)}\n\nThis is an early desktop build.`,
+        (error instanceof Error ? error.message : String(error)) +
+          "\n\nStartup log: " + startupLogPath() +
+          "\n\nSend the startup.log file when reporting this error.",
       );
       app.quit();
     }
