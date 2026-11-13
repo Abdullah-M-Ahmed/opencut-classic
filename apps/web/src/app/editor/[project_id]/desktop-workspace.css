@@ -1,0 +1,250 @@
+/*
+ * Desktop-first editing workspace.
+ * Scoped to the editor page so public pages retain their existing theme.
+ * Inspired by a professional three-pane NLE workflow, not CapCut branding.
+ */
+.desktop-editor {
+  --background: #101115;
+  --foreground: #e7e8eb;
+  --card: #17191e;
+  --popover: #1b1d22;
+  --popover-hover: #272a30;
+  --muted: #303238;
+  --muted-foreground: #999da6;
+  --border: #303239;
+  --input: #24262c;
+  --ring: #54cdec;
+  --primary: #28bedb;
+  --primary-foreground: #081316;
+  --accent: #292c32;
+  --accent-foreground: #f4f6f8;
+  --secondary: #22373e;
+  --secondary-foreground: #51d1ef;
+  background-color: #101115;
+  color: #e7e8eb;
+  color-scheme: dark;
+  font-size: 12px;
+}
+
+.desktop-editor .panel {
+  --background: #191b20;
+  --foreground: #e7e8eb;
+  --card: #1c1e23;
+  --muted: #303238;
+  --muted-foreground: #9da0a8;
+  --border: #2c2e34;
+  --accent: #292c32;
+  --accent-foreground: #f4f6f8;
+  --input: #282a30;
+  --secondary: #263238;
+  --secondary-foreground: #5ad5ef;
+  background-color: #191b20;
+  border-color: #2b2d33;
+  border-radius: 7px;
+}
+
+.desktop-editor-header {
+  position: relative;
+  height: 36px;
+  min-height: 36px;
+  display: grid;
+  grid-template-columns: 1fr minmax(170px, 2fr) 1fr;
+  align-items: center;
+  gap: 8px;
+  background: #111216;
+  padding: 0 12px;
+  border-bottom: 1px solid #23252b;
+}
+
+.desktop-editor-header-brand,
+.desktop-editor-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.desktop-editor-header-actions {
+  justify-content: flex-end;
+}
+
+.desktop-editor-wordmark {
+  font-size: 14px;
+  font-weight: 750;
+  letter-spacing: -0.035em;
+  color: #eff2f4;
+}
+
+.desktop-editor-platform {
+  font-size: 10px;
+  font-weight: 500;
+  color: #8a909b;
+  padding: 3px 6px;
+  background: #24262c;
+  border-radius: 4px;
+}
+
+.desktop-editor-project-name {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+  font-size: 12px;
+}
+
+.desktop-editor-project-name input {
+  max-width: 100%;
+  text-align: center;
+  color: #cdd0d6;
+  font-size: 12px;
+}
+
+.desktop-editor .desktop-assets-panel,
+.desktop-editor .desktop-properties-panel {
+  border-radius: 7px;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.desktop-tools-nav {
+  flex: 0 0 60px;
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  width: 100%;
+  padding: 4px 6px 0;
+  border-bottom: 1px solid #2c2e34;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+
+.desktop-tools-nav::-webkit-scrollbar,
+.desktop-inspector-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.desktop-tool-tab {
+  color: #a7a9b0;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+  flex: 1 0 42px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 4px 7px;
+  font-size: 10px;
+  line-height: 1;
+  min-width: 42px;
+  white-space: nowrap;
+}
+
+.desktop-tool-tab:hover {
+  color: #f6f7f9;
+  background: #25282e;
+}
+
+.desktop-tool-tab.is-active {
+  color: #48cfed;
+  border-bottom-color: #37c7e9;
+}
+
+.desktop-tool-tab:focus-visible,
+.desktop-inspector-tab:focus-visible {
+  outline: 2px solid #6bd9f2;
+  outline-offset: -2px;
+}
+
+.desktop-inspector-tabs {
+  flex: 0 0 43px;
+  display: flex;
+  align-items: stretch;
+  gap: 3px;
+  padding: 0 8px;
+  border-bottom: 1px solid #2c2e34;
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.desktop-inspector-tab {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0 8px;
+  color: #aeb0b7;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  flex: 0 0 auto;
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.desktop-inspector-tab svg {
+  height: 14px;
+  width: 14px;
+}
+
+.desktop-inspector-tab:hover {
+  color: #fff;
+}
+
+.desktop-inspector-tab.is-active {
+  color: #40cceb;
+  border-bottom-color: #37c7e9;
+}
+
+.desktop-player-heading {
+  flex: 0 0 31px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border-bottom: 1px solid #2c2e34;
+  color: #d7d9de;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.desktop-editor .desktop-player-content {
+  flex: 1 1 0%;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.desktop-editor .desktop-player-content > div {
+  height: 100%;
+  width: 100%;
+}
+
+.desktop-editor .desktop-properties-panel .scrollbar-hidden,
+.desktop-editor .desktop-assets-panel .scrollbar-hidden {
+  scrollbar-width: thin;
+  scrollbar-color: #41444d transparent;
+}
+
+.desktop-editor button {
+  transition: background-color .12s ease, color .12s ease;
+}
+
+/* Respect shorter laptop displays without hiding the player controls. */
+@media (max-height: 680px) {
+  .desktop-tools-nav { flex-basis: 52px; }
+  .desktop-tool-tab { padding-top: 3px; padding-bottom: 4px; }
+  .desktop-player-heading { flex-basis: 26px; }
+}
+
+@media (max-width: 1100px) {
+  .desktop-tool-tab { flex-basis: 44px; flex-grow: 0; }
+  .desktop-inspector-tab { padding-inline: 6px; }
+  .desktop-inspector-tab svg { display: none; }
+}
