@@ -29,15 +29,18 @@ import { cn } from "@/utils/ui";
 
 export function EditorHeader() {
 	return (
-		<header className="bg-background flex h-[3.4rem] items-center justify-between px-3 pt-0.5">
-			<div className="flex items-center gap-1">
+		<header className="desktop-editor-header">
+			<div className="desktop-editor-header-brand">
 				<ProjectDropdown />
+				<span className="desktop-editor-wordmark">OpenCut</span>
+				<span className="desktop-editor-platform">Desktop</span>
+			</div>
+			<div className="desktop-editor-project-name">
 				<EditableProjectName />
 			</div>
-			<nav className="flex items-center gap-2">
+			<nav className="desktop-editor-header-actions" aria-label="Project actions">
 				<FeedbackPopover />
 				<ExportButton />
-				<ThemeToggle />
 			</nav>
 		</header>
 	);

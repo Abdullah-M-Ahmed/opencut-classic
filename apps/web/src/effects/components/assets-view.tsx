@@ -9,11 +9,13 @@ import { useEditor } from "@/editor/use-editor";
 import { buildEffectElement } from "@/timeline/element-utils";
 import type { EffectDefinition } from "@/effects/types";
 
-export function EffectsView() {
-	const effects = effectsRegistry.getAll();
+export function EffectsView({ mode = "all" }: { mode?: "all" | "color" }) {
+	const effects = effectsRegistry.getAll().filter(
+		(effect) => mode === "all" || effect.type === "color-grade",
+	);
 
 	return (
-		<PanelView title="Effects">
+		<PanelView title={mode === "color" ? "Adjust" : "Effects"}>
 			<EffectsGrid effects={effects} />
 		</PanelView>
 	);

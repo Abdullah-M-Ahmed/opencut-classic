@@ -1,6 +1,5 @@
 "use client";
 
-import { Separator } from "@/components/ui/separator";
 import { type Tab, useAssetsPanelStore } from "@/components/editor/panels/assets/assets-panel-store";
 import { TabBar } from "./tabbar";
 import { Captions } from "@/subtitles/components/assets-view";
@@ -26,19 +25,14 @@ export function AssetsPanel() {
 			</div>
 		),
 		captions: <Captions />,
-		adjustment: (
-			<div className="text-muted-foreground p-4">
-				Adjustment view coming soon...
-			</div>
-		),
+		adjustment: <EffectsView mode="color" />,
 		settings: <SettingsView />,
 	};
 
 	return (
-		<div className="panel bg-background flex h-full rounded-sm border overflow-hidden">
+		<div className="panel desktop-assets-panel bg-background flex h-full min-h-0 flex-col rounded-md border overflow-hidden">
 			<TabBar />
-			<Separator orientation="vertical" />
-			<div className="flex-1 overflow-hidden">{viewMap[activeTab]}</div>
+			<div className="min-h-0 flex-1 overflow-hidden">{viewMap[activeTab]}</div>
 		</div>
 	);
 }

@@ -78,15 +78,18 @@ export function PreviewPanel({
 	return (
 		<div
 			ref={handleContainerRef}
-			className="panel bg-background relative flex size-full min-h-0 min-w-0 flex-col rounded-sm border"
+			className="panel bg-background relative flex size-full min-h-0 min-w-0 flex-col overflow-hidden rounded-md border"
 		>
-			<PreviewCanvas
-				container={container}
-				onToggleFullscreen={toggleFullscreen}
-				overlayControls={overlayControls}
-				overlayInstances={overlayInstances}
-				onOverlayVisibilityChange={onOverlayVisibilityChange}
-			/>
+			<div className="desktop-player-heading">Player</div>
+			<div className="desktop-player-content">
+				<PreviewCanvas
+					container={container}
+					onToggleFullscreen={toggleFullscreen}
+					overlayControls={overlayControls}
+					overlayInstances={overlayInstances}
+					onOverlayVisibilityChange={onOverlayVisibilityChange}
+				/>
+			</div>
 			<RenderTreeController />
 		</div>
 	);

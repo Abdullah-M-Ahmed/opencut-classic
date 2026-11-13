@@ -1,13 +1,6 @@
 "use client";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { useEditor } from "@/editor/use-editor";
 import { useElementSelection } from "@/timeline/hooks/element/use-element-selection";
 import { usePropertiesStore } from "./stores/properties-store";
@@ -62,37 +55,23 @@ export function PropertiesPanel() {
 	if (!activeTab) return null;
 
 	return (
-		<div className="panel bg-background flex h-full overflow-hidden rounded-sm border">
-			<TooltipProvider delayDuration={0}>
-				<div className="flex shrink-0 flex-col gap-0.5 border-r p-1 scrollbar-hidden overflow-y-auto">
-					{visibleTabs.map((tab) => (
-						<Tooltip key={tab.id}>
-							<TooltipTrigger asChild>
-								<Button
-									variant={tab.id === activeTab.id ? "secondary" : "ghost"}
-									size="icon"
-									onClick={() =>
-										setActiveTab({
-											elementType: element.type,
-											tabId: tab.id,
-										})
-									}
-									aria-label={tab.label}
-									className={cn(
-										"shrink-0",
-										"h-8 w-8",
-										tab.id !== activeTab.id && "text-muted-foreground",
-									)}
-								>
-									{tab.icon}
-								</Button>
-							</TooltipTrigger>
-							<TooltipContent side="right">{tab.label}</TooltipContent>
-						</Tooltip>
-					))}
-				</div>
-			</TooltipProvider>
-			<ScrollArea className="flex-1 scrollbar-hidden">
+		<div className="panel desktop-properties-panel bg-background flex h-full min-h-0 flex-col overflow-hidden rounded-md border">
+			<nav aria-label="Clip properties" className="desktop-inspector-tabs">
+				{visibleTabs.map((tab) => (
+					<button
+						key={tab.id}
+						type="button"
+						className={cn("desktop-inspector-tab", tab.id === activeTab.id && "is-active")}
+						onClick={() => setActiveTab({ elementType: element.type, tabId: tab.id })}
+						aria-pressed={tab.id === activeTab.id}
+						title={tab.label}
+					>
+						{tab.icon}
+						<span>{tab.id === "transform" ? "Video" : tab.label}</span>
+					</button>
+				))}
+			</nav>
+			<ScrollArea className="min-h-0 flex-1 scrollbar-hidden">
 				{activeTab.content({ trackId: track.id })}
 			</ScrollArea>
 		</div>
