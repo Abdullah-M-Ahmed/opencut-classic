@@ -152,6 +152,14 @@ export const ACTIONS = {
 
 export type TAction = keyof typeof ACTIONS;
 
+/** Guard imported keybinding actions without accepting those needing arguments. */
+export function isActionWithOptionalArgs(value: string): value is TActionWithOptionalArgs {
+  return Object.prototype.hasOwnProperty.call(ACTIONS, value) &&
+    value !== "remove-media-asset" &&
+    value !== "remove-media-assets";
+}
+
+
 const ACTION_DEFAULT_SHORTCUTS = [
 	["toggle-play", ["space", "k"]],
 	["seek-forward", ["l"]],
