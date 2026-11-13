@@ -66,6 +66,9 @@ jobs:
       - name: Test actual packaged Windows Electron runtime
         run: node apps/desktop-electron/scripts/smoke-test-runtime.mjs --packaged
 
+      - name: Test full packaged Windows desktop application
+        run: node apps/desktop-electron/scripts/smoke-test-desktop.mjs
+
       - name: Publish preview artifact
         uses: actions/upload-artifact@v4
         with:
