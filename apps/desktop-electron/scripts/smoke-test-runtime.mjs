@@ -20,6 +20,8 @@ const serverFile = fileExists(path.resolve(runtimeDir, manifest.serverRelativePa
 if (!serverFile.startsWith(runtimeDir + path.sep)) {
   throw new Error("Unsafe bundled server manifest path");
 }
+const dependencyDirectory = path.join(runtimeDir, "runtime-deps");
+fileExists(path.join(dependencyDirectory, "next", "package.json"));
 
 async function freePort() {
   return new Promise((resolve, reject) => {
@@ -53,6 +55,7 @@ async function probe({ command, extraEnvironment = {}, label }) {
       MARBLE_WORKSPACE_KEY: process.env.MARBLE_WORKSPACE_KEY || "unavailable",
       FREESOUND_CLIENT_ID: process.env.FREESOUND_CLIENT_ID || "unavailable",
       FREESOUND_API_KEY: process.env.FREESOUND_API_KEY || "unavailable",
+      NODE_PATH: [dependencyDirectory, process.env.NODE_PATH].filter(Boolean).join(path.delimiter),
       ...extraEnvironment,
     },
   });
